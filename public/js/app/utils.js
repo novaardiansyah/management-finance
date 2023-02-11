@@ -10,7 +10,6 @@ function sweet_alert(type, message, params = {}) {
     type: type,
     text: message,
     timer: params.timer || 3000,
-    timerProgressBar: params.timerProgressBar || true,
     showConfirmButton: params.showConfirmButton || false
   })
 }
@@ -20,3 +19,58 @@ if (select2.length) select2.select2()
 
 let summernote = $('.summernote.auto-init')
 if (summernote.length) summernote.summernote()
+
+function create_server_tables(params = {})
+{
+  let tableId = params.tableId || 'table'
+  let url     = params.url || ''
+
+  let ajax = {
+    url: url,
+    type: 'POST',
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  }
+
+  $(`#${tableId}`).DataTable({
+    processing: true,
+    serverSide: true,
+    ajax: ajax,
+    columns: params.columns || [
+      {
+        data: 'id',
+        name: 'id',
+        width: '5%',
+        render: function(data, type, row, meta) {
+          return meta.row + meta.settings._iDisplayStart + 1
+        }
+      }
+    ],
+    order: [[0, 'asc']],
+    columnDefs: [{}],
+    responsive: true,
+    autoWidth: false,
+    pageLength: 10,
+    language: {
+      processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span> ',
+      lengthMenu: 'Show _MENU_ entries',
+      zeroRecords: 'No matching records found',
+      info: 'Showing _START_ to _END_ of _TOTAL_ entries',
+      infoEmpty: 'Showing 0 to 0 of 0 entries',
+      infoFiltered: '(filtered from _MAX_ total entries)',
+      search: 'Search:',
+      paginate: {
+        first: 'First',
+        last: 'Last',
+        next: 'Next',
+        previous: 'Previous'
+      }
+    }
+  })
+}
+
+function refresh_table(tableId = 'table')
+{
+  $(`#${tableId}`).DataTable().ajax.reload()
+}

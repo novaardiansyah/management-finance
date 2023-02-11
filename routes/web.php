@@ -16,9 +16,10 @@ use Illuminate\Support\Facades\Route;
 // * Controller
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MasterData\MenuController;
 
 Route::get('/', function () {
-  return view('welcome');
+  return redirect()->route('login');
 });
 
 Route::prefix('auth')->group(function () {
@@ -31,4 +32,9 @@ Route::prefix('auth')->group(function () {
 
 Route::prefix('dashboard')->group(function () {
   Route::get('/', [DashboardController::class, 'index'])->middleware('auth');
+});
+
+Route::resource('master-data/menu', MenuController::class)->middleware('auth');
+Route::prefix('master-data/menu')->group(function () {
+  Route::post('/list-menu', [MenuController::class, 'list_menu'])->middleware('auth');
 });
