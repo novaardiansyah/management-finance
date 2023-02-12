@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 
 use App\Models\User;
 use App\Models\Menu;
+use App\Models\Submenu;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,19 +24,33 @@ class DatabaseSeeder extends Seeder
       'email_verified_at' => now(),
       'password'          => Hash::make('123456')
     ]);
-
+    
     Menu::create([
       'name'       => 'Dashboard',
       'icon'       => 'fa-tachometer-alt',
       'url'        => '/dashboard',
       'is_active'  => 1
     ]);
-    
     Menu::create([
       'name'       => 'Master Data',
       'icon'       => 'fa-database',
       'url'        => '/master-data/menu',
       'is_parent'  => 1,
+      'is_active'  => 1
+    ]);
+
+    Submenu::create([
+      'name'       => 'Menu',
+      'icon'       => 'fa-minus',
+      'url'        => '/master-data/menu',
+      'parent_id'  => 2,
+      'is_active'  => 1
+    ]);
+    Submenu::create([
+      'name'       => 'Submenu',
+      'icon'       => 'fa-minus',
+      'url'        => '/master-data/submenu',
+      'parent_id'  => 2,
       'is_active'  => 1
     ]);
   }

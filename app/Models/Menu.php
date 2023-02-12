@@ -71,4 +71,45 @@ class Menu extends Model
     Menu::where(['id' => $id])->update(['is_deleted' => 1, 'deleted_at' => date('Y-m-d H:i:s'), 'deleted_by' => $userId]);
     return ['status' => true, 'message' => 'Menu has been deleted'];
   }
+
+  public function edit($id)
+  {
+    $menu = Menu::where(['id' => $id])->first();
+    if (!$menu) return ['status' => false, 'message' => 'Sorry, menu that you are looking for is not found!', 'data' => []];
+    return ['status' => true, 'message' => 'Menu found', 'data' => $menu];
+  }
+
+  public function update_item($id, $request)
+  {
+    date_default_timezone_set('Asia/Jakarta');
+    
+    if (substr($request['icon'], 0, 3) == 'fa-') {
+      $request['icon'] = 'fa-' . substr($request['icon'], 3);
+    } else {
+      $request['icon'] = 'fa-' . $request['icon'];
+    }
+
+    if (substr($request['url'], 0, 1) == '/') {
+      $request['url'] = '/' . substr($request['url'], 1);
+    } else {
+      $request['url'] = '/' . $request['url'];
+    }
+
+    $data = [
+      'name'       => $request['name'],
+      'is_active'  => $request['status'],
+      'updated_at' => date('Y-m-d H:i:s'),
+      'updated_by' => auth()->user()->id
+    ];
+    if ($request['icon'] != '') $data = array_merge($data, ['icon' => $request['icon']]);
+    if ($request['url'] != '') $data = array_merge($data, ['url' => $request['url']]);
+
+    Menu::where(['id' => $id])->update($data);
+    return ['status' => true, 'message' => 'Menu has been updated'];
+  }
+
+  public function submenus()
+  {
+    return $this->hasMany(Submenu::class, 'parent_id', 'id')->where(['is_active' => 1, 'is_deleted' => 0]);
+  }
 }
