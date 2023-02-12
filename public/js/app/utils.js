@@ -5,10 +5,17 @@ if (is_invalid.length > 0) {
   })
 }
 
+function stripHtml(html)
+{
+  let tmp = document.createElement("DIV")
+  tmp.innerHTML = html
+  return tmp.textContent || tmp.innerText || ""
+}
+
 function sweet_alert(type, message, params = {}) {
   Swal.fire({
     type: type,
-    text: message,
+    html: `<small>${stripHtml(message)}</small>`,
     timer: params.timer || 3000,
     showConfirmButton: params.showConfirmButton || false
   })

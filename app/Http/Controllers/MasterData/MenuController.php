@@ -16,7 +16,11 @@ class MenuController extends Controller
   public function index()
   {
     $data = [
-      'title' => 'Menu management'
+      'title' => 'Menu management',
+      'breadcrumbs' => [
+        ['name' => 'Master Data', 'url' => 'master-data/menu'],
+        ['name' => 'Menu', 'url' => '']
+      ]
     ];
     return view('master-data.menu.Menu', $data);
   }
@@ -87,7 +91,9 @@ class MenuController extends Controller
    */
   public function edit($id)
   {
-    //
+    $Menu = new Menu();
+    $result = $Menu->edit($id);
+    return response()->json($result);
   }
 
   /**
@@ -99,7 +105,15 @@ class MenuController extends Controller
    */
   public function update(Request $request, $id)
   {
-    //
+    $validate = $request->validate([
+      'name'   => 'required',
+      'status' => 'required|numeric|between:0,1'
+    ]);
+
+    $Menu = new Menu();
+    $result = $Menu->update_item($id, $request->all());
+
+    return response()->json($result);
   }
 
   /**
