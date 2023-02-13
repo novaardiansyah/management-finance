@@ -1,0 +1,7 @@
+#loader-screen {
+  position: fixed;
+  min-width: 100vw;
+  min-height: 100vh;
+  background-color: rgba(0, 0, 0, .3);
+  z-index: 9999;
+}

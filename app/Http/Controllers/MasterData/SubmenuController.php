@@ -4,6 +4,8 @@ namespace App\Http\Controllers\MasterData;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Submenu;
+use App\Models\Menu;
 
 class SubmenuController extends Controller
 {
@@ -14,7 +16,43 @@ class SubmenuController extends Controller
    */
   public function index()
   {
-    //
+    $data = [
+      'title' => 'Submenu management',
+      'breadcrumbs' => [
+        ['name' => 'Master Data', 'url' => 'master-data/submenu'],
+        ['name' => 'Submenu', 'url' => '']
+      ]
+    ];
+    return view('master-data.submenu.Submenu', $data);
+  }
+
+  public function list_submenu()
+  {
+    $columns      = ['id', 'name', 'icon', 'url', 'is_active'];
+    $column_index = request('order')[0]['column'];
+
+    $Submenu = new Submenu();
+    
+    $result = $Submenu->list_submenu([
+      'skip'   => request('start'),
+      'take'   => request('length'),
+      'column' => $columns[$column_index],
+      'order'  => request('order')[0]['dir'],
+      'search' => request('search')['value']
+    ]);
+
+    echo json_encode($result);
+  }
+
+  public function menus()
+  {
+    $result = Menu::where(['is_active' => 1, 'is_deleted' => 0])->get();
+    
+    return response()->json([
+      'status'  => true,
+      'message' => 'Menu has been loaded',
+      'data'    => $result
+    ]);
   }
 
   /**
@@ -80,6 +118,8 @@ class SubmenuController extends Controller
    */
   public function destroy($id)
   {
-    //
+    $Submenu = new Submenu();
+    $result = $Submenu->destroy_item($id);
+    return response()->json($result);
   }
 }

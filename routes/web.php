@@ -42,5 +42,6 @@ Route::prefix('master-data/menu')->group(function () {
 
 Route::resource('master-data/submenu', SubmenuController::class)->middleware('auth');
 Route::prefix('master-data/submenu')->group(function () {
+  Route::post('/menus', [SubmenuController::class, 'menus'])->middleware('auth');
   Route::post('/list-submenu', [SubmenuController::class, 'list_submenu'])->middleware('auth');
 });
