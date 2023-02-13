@@ -26,9 +26,15 @@
   <link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/summernote/summernote-bs4.css') }}" />
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}" />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ asset('css/main.css') }}" />
 </head>
 
 <body class="hold-transition sidebar-mini sidebar-collapse">
+  <div id="loader-screen" class="d-flex justify-content-center align-items-center">
+    <img src="{{ asset('img/loader.svg') }}" alt="Loading..." />
+  </div>
+
   <!-- Site wrapper -->
   <div class="wrapper">
     @include('layouts.components.Navbar')

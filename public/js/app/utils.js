@@ -1,8 +1,19 @@
+$(document).ready(function () {
+  setTimeout(() => {
+    loading(false)  
+  }, 750);
+})
+
 let is_invalid = $('.form-control.is-invalid')
 if (is_invalid.length > 0) {
   $('.form-control.is-invalid').on('click focus blur', function () {
     $(this).removeClass('is-invalid')
   })
+}
+
+function loading(type = true)
+{
+  type === false ? $('#loader-screen').removeClass('d-flex').hide() : $('#loader-screen').addClass('d-flex').show() 
 }
 
 function stripHtml(html)

@@ -1,5 +1,5 @@
 let tableId    = 'listMenu'
-let defaultUrl = url('master-data/menu/list-menu')
+let defaultUrl = url('master-data/submenu/list-submenu')
 
 create_server_tables({ tableId: tableId, url: defaultUrl, columns: [
   {
@@ -8,6 +8,13 @@ create_server_tables({ tableId: tableId, url: defaultUrl, columns: [
     width: '5%',
     render: function(data, type, row, meta) {
       return meta.row + meta.settings._iDisplayStart + 1
+    }
+  },
+  {
+    data: 'menu.name',
+    name: 'menu.name',
+    render: function(data, type, row, meta) {
+      return data ? `<i class="fa fa-fw ${row.menu.icon}"></i> ${data}` : '-'
     }
   },
   { data: 'name', name: 'name' },
@@ -59,6 +66,28 @@ function preview_icon(event)
   if (icon === '') return preview.html(`<i class="fa fa-fw fa-minus"></i>`)
   preview.html(`<i class="fa fa-fw fa-${icon}"></i>`)
 }
+
+
+function get_menus()
+{
+  $.ajax({
+    url: url('master-data/submenu/menus'),
+    type: 'POST',
+    dataType: 'json',
+    data: {
+      _token: config.csrf_token
+    },
+    beforeSend: function() {
+      loading(true)
+    },
+    success: function(response) {
+      loading(false)
+      console.log(response)
+    }
+  })
+}
+
+get_menus()
 
 // * Feature to add menu data (Start)
 function modalCreate(trigger = 'show', size = 'modal-md')
@@ -378,7 +407,7 @@ function destroy(event = false, id)
   }).then((result) => {
     if (result.value) {
       $.ajax({
-        url: url(`master-data/menu/${atob(id)}`),
+        url: url(`master-data/submenu/${atob(id)}`),
         type: 'DELETE',
         data: {
           _token: config.csrf_token,
